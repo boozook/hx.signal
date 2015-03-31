@@ -28,7 +28,7 @@ rm -r ~/temp_for_install
 
 ### Usage:
 
-See test for examples.
+See test for more examples. But this is classic signals and really simple to use.
 
 ````haxe
 var signal:Signal<Int -> Void>;
