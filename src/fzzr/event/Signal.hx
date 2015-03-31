@@ -1,4 +1,4 @@
-package haxe.event;
+package fzzr.event;
 
 #if macro
 import haxe.macro.Expr;

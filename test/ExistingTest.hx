@@ -1,6 +1,6 @@
 package ;
 
-import haxe.event.Signal;
+import fzzr.event.Signal;
 import haxe.unit.TestCase;
 
 /**
