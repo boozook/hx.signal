@@ -1,48 +1,35 @@
 package ;
 
-import haxe.ds.HashMap;
-import haxe.event.Signal;
+import fzzr.event.Signal;
 import haxe.unit.TestCase;
 
-/**
-	Created by Alexander "fzzr" Kozlovskij
- **/
+// demo for Haxe-plugin issue #196 (https://github.com/TiVo/intellij-haxe/issues/196)
 class CopyPasteTest extends TestCase
 {
-	//----------- properties, fields ------------//
-
-	var signal0:SignalEmpty;
-
-	//--------------- constructor ---------------//
+	var signal:SignalEmpty;
 
 	public function new()
 	{
 		super();
 	}
 
-
-	//--------------- initialize ----------------//
-
 	override public function setup():Void
 	{
-		signal0 = new Signal();
+		signal = new Signal();
 	}
 
 	override public function tearDown():Void
 	{
-		signal0 = null;
+		signal = null;
 	}
-
-	//----------------- tests -------------------//
 
 	public function testCopyPaste():Void
 	{
 		assertTrue(true);
 
 		function handler(){};
-		signal0.add
+		signal.add
+
+		ffffffff WTF?????
 	}
-
-
-	//----------------- tools -------------------//
 }
