@@ -36,16 +36,14 @@ class ExistingTest extends TestCase
 
 	public function testAdd()
 	{
-		function handler()
-		{};
+		function handler(){};
 		signal0.add(handler);
 		assertTrue(signal0.has(handler));
 	}
 
 	public function testAddRemove()
 	{
-		function handler()
-		{};
+		function handler(){};
 
 		signal0.add(handler);
 		signal0.remove(handler);
@@ -54,8 +52,7 @@ class ExistingTest extends TestCase
 
 	public function testAddRemoveDouble()
 	{
-		function handler()
-		{};
+		function handler(){};
 
 		signal0.add(handler);
 		assertTrue(signal0.has(handler));
@@ -69,8 +66,7 @@ class ExistingTest extends TestCase
 
 	public function testAddOnce()
 	{
-		function handler()
-		{};
+		function handler(){};
 
 		signal0.addOnce(handler);
 		assertTrue(signal0.has(handler));
@@ -82,8 +78,7 @@ class ExistingTest extends TestCase
 
 	public function testAddOnceRemove()
 	{
-		function handler()
-		{};
+		function handler(){};
 
 		signal0.addOnce(handler);
 		signal0.remove(handler);
@@ -92,8 +87,7 @@ class ExistingTest extends TestCase
 
 	public function testAddOnceRemoveDouble()
 	{
-		function handler()
-		{};
+		function handler(){};
 
 		signal0.addOnce(handler);
 		signal0.addOnce(handler);
@@ -108,8 +102,7 @@ class ExistingTest extends TestCase
 
 	public function testAddOnceOverride()
 	{
-		function handler()
-		{};
+		function handler(){};
 
 		signal0.addOnce(handler);
 		try

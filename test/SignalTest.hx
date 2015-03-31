@@ -60,63 +60,54 @@ class SignalTest extends TestCase
 	{
 		addOnceTestUni(signal0, handler0);
 		assertEquals(catched, 1);
-		//TODO: assertTrue(signal0.has(handler0));
 	}
 
 	public function testAdd1()
 	{
 		addTestUni(signal1, handler1, [1], 3);
 		assertEquals(catched, 3);
-		//TODO: assertTrue(signal1.has(handler1));
 	}
 
 	public function testAddOnce1()
 	{
 		addOnceTestUni(signal1, handler1, [1], 3);
 		assertEquals(catched, 1);
-		//TODO: assertTrue(signal1.has(handler1));
 	}
 
 	public function testAdd2()
 	{
 		addTestUni(signal2, handler2, [1, 2], 3);
 		assertEquals(catched, 3);
-		//TODO: assertTrue(signal2.has(handler2));
 	}
 
 	public function testAddOnce2()
 	{
 		addOnceTestUni(signal2, handler2, [1, 2], 3);
 		assertEquals(catched, 1);
-		//TODO: assertTrue(signal2.has(handler2));
 	}
 
 	public function testAdd3()
 	{
 		addTestUni(signal3, handler3, [1, 2, 3], 3);
 		assertEquals(catched, 3);
-		//TODO: assertTrue(signal3.has(handler3));
 	}
 
 	public function testAddOnce3()
 	{
 		addOnceTestUni(signal3, handler3, [1, 2, 3], 3);
 		assertEquals(catched, 1);
-		//TODO: assertTrue(signal3.has(handler3));
 	}
 
 	public function testAdd4()
 	{
 		addTestUni(signal4, handler4, [1, 2, 3, 4], 3);
 		assertEquals(catched, 3);
-		//TODO: assertTrue(signal4.has(handler4));
 	}
 
 	public function testAddOnce4()
 	{
 		addOnceTestUni(signal4, handler4, [1, 2, 3, 4], 3);
 		assertEquals(catched, 1);
-		//TODO: assertTrue(signal4.has(handler4));
 	}
 
 
