@@ -1,0 +1,25 @@
+{
+  "name": "signal",
+  "license": "MIT",
+  "classPath": "src",
+  "url": "https://bitbucket.org/fzzr/hx.signal",
+  "tags": [
+	"event",
+	"signal",
+	"dispatch",
+	"cross",
+
+	"flash",
+	"java",
+	"neko",
+	"cpp",
+	"php",
+	"js",
+	"py"
+  ],
+  "description": "Simple Signals implementation.",
+  "version": "0.9.2",
+  "releasenote": "Initial public release",
+  "contributors": ["fzzr", "fizzer"],
+  "dependencies": {}
+}

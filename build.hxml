@@ -1,0 +1,52 @@
+-main Main
+-cp ./src
+-cp ./test
+
+# Haxe Compiler options:
+-D analyzer
+-dce full
+
+--each
+
+
+-cmd echo Neko:
+-neko ./out/production/tests/neko/Main.n
+-cmd neko ./out/production/tests/neko/Main.n
+
+
+--next
+-cmd echo JS:
+-js ./out/production/tests/js/Main.js
+-cmd /usr/local/bin/node ./out/production/tests/js/Main.js
+
+
+--next
+-cmd echo Java:
+-java ./out/production/tests/java/
+-cmd java -jar ./out/production/tests/java/Main.jar
+
+
+--next
+-cmd echo C++:
+-cpp ./out/production/tests/cpp/
+-cmd ./out/production/tests/cpp/Main
+
+
+--next
+-cmd echo Flash:
+-swf ./out/production/tests/flash/Main.swf
+-cmd open ./out/production/tests/flash/Main.swf
+
+
+
+
+
+
+#--next
+#-cmd echo Python:
+#-python ./out/production/tests/py/Main.py
+#-cmd python ./out/production/tests/py/Main.py
+
+
+#TODO: C#
+#-cs ./out/production/tests/cs/
