@@ -10,7 +10,7 @@ class ExistingTest extends TestCase
 {
 	//----------- properties, fields ------------//
 
-	var signal0:Empty;
+	var signal:Signal<Void -> Void>;
 
 	//--------------- constructor ---------------//
 
@@ -24,12 +24,12 @@ class ExistingTest extends TestCase
 
 	override public function setup():Void
 	{
-		signal0 = new Signal();
+		signal = new Signal();
 	}
 
 	override public function tearDown():Void
 	{
-		signal0 = null;
+		signal = null;
 	}
 
 	//----------------- tests -------------------//
@@ -37,30 +37,30 @@ class ExistingTest extends TestCase
 	public function testAdd()
 	{
 		function handler(){};
-		signal0.add(handler);
-		assertTrue(signal0.has(handler));
+		signal.add(handler);
+		assertTrue(signal.has(handler));
 	}
 
 	public function testAddRemove()
 	{
 		function handler(){};
 
-		signal0.add(handler);
-		signal0.remove(handler);
-		assertFalse(signal0.has(handler));
+		signal.add(handler);
+		signal.remove(handler);
+		assertFalse(signal.has(handler));
 	}
 
 	public function testAddRemoveDouble()
 	{
 		function handler(){};
 
-		signal0.add(handler);
-		assertTrue(signal0.has(handler));
-		signal0.add(handler);
-		assertTrue(signal0.has(handler));
+		signal.add(handler);
+		assertTrue(signal.has(handler));
+		signal.add(handler);
+		assertTrue(signal.has(handler));
 
-		signal0.remove(handler);
-		assertFalse(signal0.has(handler));
+		signal.remove(handler);
+		assertFalse(signal.has(handler));
 	}
 
 
@@ -68,11 +68,11 @@ class ExistingTest extends TestCase
 	{
 		function handler(){};
 
-		signal0.addOnce(handler);
-		assertTrue(signal0.has(handler));
+		signal.addOnce(handler);
+		assertTrue(signal.has(handler));
 
-		signal0.dispatch();
-		assertFalse(signal0.has(handler));
+		signal.dispatch();
+		assertFalse(signal.has(handler));
 	}
 
 
@@ -80,34 +80,34 @@ class ExistingTest extends TestCase
 	{
 		function handler(){};
 
-		signal0.addOnce(handler);
-		signal0.remove(handler);
-		assertFalse(signal0.has(handler));
+		signal.addOnce(handler);
+		signal.remove(handler);
+		assertFalse(signal.has(handler));
 	}
 
 	public function testAddOnceRemoveDouble()
 	{
 		function handler(){};
 
-		signal0.addOnce(handler);
-		signal0.addOnce(handler);
-		signal0.dispatch();
-		assertFalse(signal0.has(handler));
+		signal.addOnce(handler);
+		signal.addOnce(handler);
+		signal.dispatch();
+		assertFalse(signal.has(handler));
 
-		signal0.addOnce(handler);
-		signal0.addOnce(handler);
-		signal0.remove(handler);
-		assertFalse(signal0.has(handler));
+		signal.addOnce(handler);
+		signal.addOnce(handler);
+		signal.remove(handler);
+		assertFalse(signal.has(handler));
 	}
 
 	public function testAddOnceOverride()
 	{
 		function handler(){};
 
-		signal0.addOnce(handler);
+		signal.addOnce(handler);
 		try
 		{
-			signal0.add(handler);
+			signal.add(handler);
 			assertFalse(true);
 
 		}
@@ -115,15 +115,15 @@ class ExistingTest extends TestCase
 		{
 			assertEquals(error, SignalError.HandlerExisting);
 		}
-		assertTrue(signal0.has(handler));
-		signal0.dispatch();
-		assertFalse(signal0.has(handler));
+		assertTrue(signal.has(handler));
+		signal.dispatch();
+		assertFalse(signal.has(handler));
 
 
-		signal0.add(handler);
+		signal.add(handler);
 		try
 		{
-			signal0.addOnce(handler);
+			signal.addOnce(handler);
 			assertFalse(true);
 
 		}
@@ -131,12 +131,12 @@ class ExistingTest extends TestCase
 		{
 			assertEquals(error, SignalError.HandlerExisting);
 		}
-		assertTrue(signal0.has(handler));
-		signal0.dispatch();
-		signal0.dispatch();
-		assertTrue(signal0.has(handler));
+		assertTrue(signal.has(handler));
+		signal.dispatch();
+		signal.dispatch();
+		assertTrue(signal.has(handler));
 
-		signal0.remove(handler);
-		assertFalse(signal0.has(handler));
+		signal.remove(handler);
+		assertFalse(signal.has(handler));
 	}
 }

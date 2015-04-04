@@ -249,7 +249,7 @@ private class Signal4<T1, T2, T3, T4> extends Base<T1 -> T2 -> T3 -> T4 -> Void>
 		Base.buildDispatch(value1, value2, value3, value4);
 }
 
-typedef Empty = Signal<Void -> Void>;
+typedef Signl<T> = Signal<T -> Void>;
 
 
 @:enum abstract SignalError(String) to String
