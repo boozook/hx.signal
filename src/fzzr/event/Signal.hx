@@ -1,29 +1,19 @@
 package fzzr.event;
 
+import haxe.Constraints.Function in Method;
+
+
 #if macro
+import haxe.macro.Printer;
+import haxe.macro.Context;
 import haxe.macro.Expr;
 #end
 
 
 /**
 	Created by Alex Koz aka "fzzr".
-	Inspired by FlxSignal
  **/
-
-
-/*
-TODO: Generate it via macro instead that:
-	private class Signal1<T1> extends SignalBase<T1 -> Void>
-	private class Signal2<T1, T2> extends SignalBase<T1 -> T2 -> Void>
-	private class Signal3<T1, T2, T3> extends SignalBase<T1 -> T2 -> T3 -> Void>
-	private class Signal4<T1, T2, T3, T4> extends SignalBase<T1 -> T2 -> T3 -> T4 -> Void>
-*/
-
-
-typedef SignalEmpty = Signal<Void -> Void>;
-
-@:keep
-interface ISignal<T>
+private interface ISignal<T:Method>
 {
 	public var dispatch:T;
 	public function add(listener:T):Void;
@@ -31,81 +21,46 @@ interface ISignal<T>
 	public function remove(listener:T):Void;
 	public function removeAll():Void;
 	public function has(listener:T):Bool;
-
 	public function dispose():Void;
 }
 
 
 @:keep
 @:multiType
-abstract Signal<T>(ISignal<T>)
+@:forward(add, addOnce, remove, removeAll, has)
+#if !macro
+@:build(fzzr.event.Signal.Builder.build()) #end
+abstract Signal<T:Method>(ISignal<T>)
 {
 	public var dispatch(get, never):T;
 
 	public function new();
 
-	public inline function add(listener:T):Void
-	{
-		this.add(listener);
-	}
-
-	public inline function addOnce(listener:T):Void
-	{
-		this.addOnce(listener);
-	}
-
-	public inline function remove(listener:T):Void
-	{
-		this.remove(listener);
-	}
-
-	public inline function has(listener:T):Bool
-	{
-		return this.has(listener);
-	}
-
-	public inline function removeAll():Void
-	{
-		this.removeAll();
-	}
-
 	private inline function get_dispatch():T
-	{
 		return this.dispatch;
-	}
 
 	@:to
 	private static inline function toSignal0(signal:ISignal<Void -> Void>):Signal0
-	{
 		return new Signal0();
-	}
 
 	@:to
 	private static inline function toSignal1<T1>(signal:ISignal<T1 -> Void>):Signal1<T1>
-	{
 		return new Signal1();
-	}
 
 	@:to
 	private static inline function toSignal2<T1, T2>(signal:ISignal<T1 -> T2 -> Void>):Signal2<T1, T2>
-	{
 		return new Signal2();
-	}
 
 	@:to
 	private static inline function toSignal3<T1, T2, T3>(signal:ISignal<T1 -> T2 -> T3 -> Void>):Signal3<T1, T2, T3>
-	{
 		return new Signal3();
-	}
 
 	@:to
 	private static inline function toSignal4<T1, T2, T3, T4>(signal:ISignal<T1 -> T2 -> T3 -> T4 -> Void>):Signal4<T1, T2, T3, T4>
-	{
 		return new Signal4();
-	}
 }
 
-private class SignalHandler<T>
+private class Handler<T>
 {
 	public var listener:T;
 	public var dispatchOnce(default, null):Bool = false;
@@ -117,18 +72,18 @@ private class SignalHandler<T>
 	}
 
 	public function dispose()
-	{
 		listener = null;
-	}
 }
 
-private class SignalBase<T> implements ISignal<T>
+#if !macro
+@:autoBuild(fzzr.event.Signal.Builder.buildSignalImpl()) #end
+private class Base<T:Method> implements ISignal<T>
 {
 	macro static function buildDispatch(exprs:Array<Expr>):Expr
 	{
 		return macro
 		{
-			for(handler in _handlers)
+			for(handler in handlers)
 			{
 				handler.listener($a{exprs});
 
@@ -143,11 +98,11 @@ private class SignalBase<T> implements ISignal<T>
 	 */
 	public var dispatch:T;
 
-	private var _handlers:Array<SignalHandler<T>>;
+	private var handlers:Array<Handler<T>>;
 
 	public function new()
 	{
-		_handlers = [];
+		handlers = [];
 	}
 
 	public function add(listener:T)
@@ -169,7 +124,7 @@ private class SignalBase<T> implements ISignal<T>
 			var handler = getHandler(listener);
 			if(handler != null)
 			{
-				_handlers.remove(handler);
+				handlers.remove(handler);
 				handler.dispose();
 				handler = null;
 			}
@@ -185,9 +140,9 @@ private class SignalBase<T> implements ISignal<T>
 
 	public inline function removeAll():Void
 	{
-		while(_handlers.length > 0)
+		while(handlers.length > 0)
 		{
-			var handler = _handlers.pop();
+			var handler = handlers.pop();
 			handler.dispose();
 			handler = null;
 		}
@@ -196,17 +151,17 @@ private class SignalBase<T> implements ISignal<T>
 	public function dispose():Void
 	{
 		removeAll();
-		_handlers = null;
+		handlers = null;
 	}
 
-	private function registerListener(listener:T, dispatchOnce:Bool):SignalHandler<T>
+	private function registerListener(listener:T, dispatchOnce:Bool):Handler<T>
 	{
 		var handler = getHandler(listener);
 
 		if(handler == null)
 		{
-			handler = new SignalHandler<T>(listener, dispatchOnce);
-			_handlers.push(handler);
+			handler = new Handler<T>(listener, dispatchOnce);
+			handlers.push(handler);
 			return handler;
 		}
 		else
@@ -220,9 +175,9 @@ private class SignalBase<T> implements ISignal<T>
 		}
 	}
 
-	private function getHandler(listener:T):SignalHandler<T>
+	private function getHandler(listener:T):Handler<T>
 	{
-		for(handler in _handlers)
+		for(handler in handlers)
 		{
 			if(handler.listener == listener)
 				// Listener was already registered.
@@ -234,7 +189,7 @@ private class SignalBase<T> implements ISignal<T>
 	}
 }
 
-private class Signal0 extends SignalBase<Void -> Void>
+private class Signal0 extends Base<Void -> Void>
 {
 	public function new()
 	{
@@ -243,12 +198,10 @@ private class Signal0 extends SignalBase<Void -> Void>
 	}
 
 	private function dispatch0():Void
-	{
-		SignalBase.buildDispatch();
-	}
+		Base.buildDispatch();
 }
 
-private class Signal1<T1> extends SignalBase<T1 -> Void>
+private class Signal1<T1> extends Base<T1 -> Void>
 {
 	public function new()
 	{
@@ -257,13 +210,10 @@ private class Signal1<T1> extends SignalBase<T1 -> Void>
 	}
 
 	private function dispatch1(value1:T1):Void
-	{
-		SignalBase.buildDispatch(value1);
-	}
+		Base.buildDispatch(value1);
 }
 
-//TODO: remove it & gen in build-macro:
-private class Signal2<T1, T2> extends SignalBase<T1 -> T2 -> Void>
+private class Signal2<T1, T2> extends Base<T1 -> T2 -> Void>
 {
 	public function new()
 	{
@@ -272,13 +222,10 @@ private class Signal2<T1, T2> extends SignalBase<T1 -> T2 -> Void>
 	}
 
 	private function dispatch2(value1:T1, value2:T2):Void
-	{
-		SignalBase.buildDispatch(value1, value2);
-	}
+		Base.buildDispatch(value1, value2);
 }
 
-//TODO: remove it & gen in build-macro:
-private class Signal3<T1, T2, T3> extends SignalBase<T1 -> T2 -> T3 -> Void>
+private class Signal3<T1, T2, T3> extends Base<T1 -> T2 -> T3 -> Void>
 {
 	public function new()
 	{
@@ -287,13 +234,10 @@ private class Signal3<T1, T2, T3> extends SignalBase<T1 -> T2 -> T3 -> Void>
 	}
 
 	private function dispatch3(value1:T1, value2:T2, value3:T3):Void
-	{
-		SignalBase.buildDispatch(value1, value2, value3);
-	}
+		Base.buildDispatch(value1, value2, value3);
 }
 
-//TODO: remove it & gen in build-macro:
-private class Signal4<T1, T2, T3, T4> extends SignalBase<T1 -> T2 -> T3 -> T4 -> Void>
+private class Signal4<T1, T2, T3, T4> extends Base<T1 -> T2 -> T3 -> T4 -> Void>
 {
 	public function new()
 	{
@@ -302,13 +246,43 @@ private class Signal4<T1, T2, T3, T4> extends SignalBase<T1 -> T2 -> T3 -> T4 ->
 	}
 
 	private function dispatch4(value1:T1, value2:T2, value3:T3, value4:T4):Void
+		Base.buildDispatch(value1, value2, value3, value4);
+}
+
+typedef Empty = Signal<Void -> Void>;
+
+
+@:enum abstract SignalError(String) to String
+{
+	var HandlerExisting = "You cannot addOnce() then add() the same listener without removing the relationship first.";
+}
+
+
+#if macro
+class Builder
+{
+	public static function build()
 	{
-		SignalBase.buildDispatch(value1, value2, value3, value4);
+		Context.onTypeNotFound(function(s:String)
+		                       {
+			                       return null;
+		                       });
+		Context.onGenerate(function(callback:Array<haxe.macro.Type>):Void
+		                   {
+		                   });
+
+		Context.onAfterGenerate(function():Void
+		                        {
+		                        });
+
+		return null;
+	}
+
+
+	public static function buildSignalImpl():Array<Field>
+	{
+		var fields = Context.getBuildFields();
+		return fields;
 	}
 }
-
-
-@:enum abstract SignalError(String) from String to String
-{
-	var HandlerExisting:String = "You cannot addOnce() then add() the same listener without removing the relationship first.";
-}
+#end

@@ -10,7 +10,7 @@ class ExistingTest extends TestCase
 {
 	//----------- properties, fields ------------//
 
-	var signal0:SignalEmpty;
+	var signal0:Empty;
 
 	//--------------- constructor ---------------//
 

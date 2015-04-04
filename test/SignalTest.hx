@@ -12,7 +12,7 @@ class SignalTest extends TestCase
 	//----------- properties, fields ------------//
 
 	var catched:Int = 0;
-	var signal0:SignalEmpty;
+	var signal0:Signal<Void -> Void>;
 	var signal1:Signal<Int -> Void>;
 	var signal2:Signal<Int -> Int -> Void>;
 	var signal3:Signal<Int -> Int -> Int -> Void>;

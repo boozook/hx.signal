@@ -2,7 +2,8 @@
 -cp ./src
 -cp ./test
 
-# Haxe Compiler options:
+# defines / options:
+#-D dump
 -D analyzer
 -dce full
 
